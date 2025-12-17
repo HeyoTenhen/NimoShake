@@ -63,3 +63,11 @@ done
 # copy scripts
 cp scripts/start.sh ${output}/
 cp scripts/stop.sh ${output}/
+
+# build hypervisor 
+if [ "Linux" == "$(uname -s)" ];then
+	# hypervisor
+	gcc -Wall -O3 scripts/hypervisor.c -o ${output}/hypervisor -lpthread
+elif [ "Darwin" == "$(uname -s)" ];then
+	printf "\\nWARNING !!! MacOS doesn't supply hypervisor\\n"
+fi
