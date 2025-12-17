@@ -1,9 +1,9 @@
 package protocal
 
 import (
-	"nimo-shake/common"
-
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+
+	"nimo-shake/common"
 )
 
 // convert DynamoDB attributeValue to bson
