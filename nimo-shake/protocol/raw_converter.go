@@ -2,13 +2,15 @@ package protocal
 
 import (
 	"fmt"
-	conf "nimo-shake/configure"
 	"reflect"
+
+	conf "nimo-shake/configure"
 
 	bson2 "go.mongodb.org/mongo-driver/bson"
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	LOG "github.com/vinllen/log4go"
+
+	LOG "nimo-shake/third_party/log4go"
 )
 
 type RawConverter struct {

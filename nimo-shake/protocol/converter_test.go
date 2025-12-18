@@ -1,14 +1,14 @@
 package protocal
 
 import (
-	"testing"
 	"fmt"
+	"strconv"
+	"testing"
 
-	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/stretchr/testify/assert"
 	"github.com/vinllen/mgo/bson"
-	"strconv"
 )
 
 func TestRawConverter(t *testing.T) {
@@ -19,7 +19,7 @@ func TestRawConverter(t *testing.T) {
 		fmt.Printf("TestRawConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
@@ -39,7 +39,7 @@ func TestRawConverter(t *testing.T) {
 		fmt.Printf("TestRawConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
@@ -52,10 +52,10 @@ func TestRawConverter(t *testing.T) {
 		out, err := rc.Run(src)
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
-			"test": bson.M {
+			"test": bson.M{
 				"N": "12345",
 			},
-			"fuck": bson.M {
+			"fuck": bson.M{
 				"S": "hello",
 			},
 		}, out.(RawData).Data, "should be equal")
@@ -65,7 +65,7 @@ func TestRawConverter(t *testing.T) {
 		fmt.Printf("TestRawConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
@@ -96,22 +96,22 @@ func TestRawConverter(t *testing.T) {
 		out, err := rc.Run(src)
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
-			"test": bson.M {
+			"test": bson.M{
 				"N": "12345",
 			},
-			"fuck": bson.M {
+			"fuck": bson.M{
 				"S": "hello",
 			},
-			"test-string-list": bson.M {
+			"test-string-list": bson.M{
 				"SS": []interface{}{"z1", "z2", "z3"},
 			},
-			"test-number-list": bson.M {
+			"test-number-list": bson.M{
 				"NS": []interface{}{"123", "456", "78999999999999999999999999999"},
 			},
-			"test-bool": bson.M {
+			"test-bool": bson.M{
 				"BOOL": true,
 			},
-			"test-byte": bson.M {
+			"test-byte": bson.M{
 				"B": []byte{123, 45, 78, 0, 12},
 			},
 			"test-byte-list": bson.M{
@@ -127,12 +127,12 @@ func TestRawConverter(t *testing.T) {
 		fmt.Printf("TestRawConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
 			"test-inner-struct": {
-				L: []*dynamodb.AttributeValue {
+				L: []*dynamodb.AttributeValue{
 					{
 						S: aws.String("hello-inner"),
 						N: aws.String("12345"),
@@ -158,11 +158,11 @@ func TestRawConverter(t *testing.T) {
 		out, err := rc.Run(src)
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
-			"test": bson.M {
+			"test": bson.M{
 				"N": "12345",
 			},
-			"test-inner-struct": bson.M {
-				"L": []interface{} {
+			"test-inner-struct": bson.M{
+				"L": []interface{}{
 					bson.M{
 						"S": "hello-inner",
 						"N": "12345",
@@ -172,14 +172,14 @@ func TestRawConverter(t *testing.T) {
 					},
 				},
 			},
-			"test-inner-map": bson.M {
-				"M": bson.M {
+			"test-inner-map": bson.M{
+				"M": bson.M{
 					"test": bson.M{
 						"N": "12345000",
 					},
 				},
 			},
-			"test-NULL": bson.M {
+			"test-NULL": bson.M{
 				"NULL": false,
 			},
 		}, out.(RawData).Data, "should be equal")
@@ -238,7 +238,7 @@ func TestTypeConverter(t *testing.T) {
 		val3_2, err := bson.ParseDecimal128(fmt.Sprintf("%v", val3))
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
-			"test": val,
+			"test":  val,
 			"test2": val2,
 			"test3": val3_2,
 		}, out.(RawData).Data, "should be equal")
@@ -248,7 +248,7 @@ func TestTypeConverter(t *testing.T) {
 		fmt.Printf("TestTypeConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
@@ -272,7 +272,7 @@ func TestTypeConverter(t *testing.T) {
 		fmt.Printf("TestTypeConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
@@ -311,12 +311,12 @@ func TestTypeConverter(t *testing.T) {
 		val4, err := bson.ParseDecimal128("789999999999")
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
-			"test": val,
-			"fuck": "hello",
+			"test":             val,
+			"fuck":             "hello",
 			"test-string-list": []string{"z1", "z2", "z3"},
 			"test-number-list": []bson.Decimal128{val2, val3, val4},
-			"test-bool": true,
-			"test-byte": []byte{123, 45, 78, 0, 12},
+			"test-bool":        true,
+			"test-byte":        []byte{123, 45, 78, 0, 12},
 			"test-byte-list": [][]byte{
 				{123, 33, 44, 0, 55},
 				{0, 1, 2, 0, 5},
@@ -328,12 +328,12 @@ func TestTypeConverter(t *testing.T) {
 		fmt.Printf("TestTypeConverter case %d.\n", nr)
 		nr++
 
-		src := map[string]*dynamodb.AttributeValue {
+		src := map[string]*dynamodb.AttributeValue{
 			"test": {
 				N: aws.String("12345"),
 			},
 			"test-inner-struct": {
-				L: []*dynamodb.AttributeValue {
+				L: []*dynamodb.AttributeValue{
 					{
 						S: aws.String("hello-inner"),
 						// N: aws.String("12345"),
@@ -354,7 +354,7 @@ func TestTypeConverter(t *testing.T) {
 				NULL: aws.Bool(false),
 			},
 			"N": {
-				M:map[string]*dynamodb.AttributeValue{
+				M: map[string]*dynamodb.AttributeValue{
 					"NN": {
 						N: aws.String("567"),
 					},
@@ -376,17 +376,17 @@ func TestTypeConverter(t *testing.T) {
 		assert.Equal(t, nil, err, "should be equal")
 		assert.Equal(t, bson.M{
 			"test": val,
-			"test-inner-struct": []interface{} {
+			"test-inner-struct": []interface{}{
 				"hello-inner",
 				[]string{"zi1", "zi2", "zi3"},
 			},
-			"test-inner-map": bson.M {
+			"test-inner-map": bson.M{
 				"test": val2,
 			},
 			"test-NULL": false,
-			"N": bson.M {
+			"N": bson.M{
 				"NN": val3,
-				"M": "899",
+				"M":  "899",
 			},
 		}, out.(RawData).Data, "should be equal")
 	}

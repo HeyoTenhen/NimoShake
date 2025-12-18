@@ -2,16 +2,17 @@ package protocal
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	LOG "github.com/vinllen/log4go"
+
 	conf "nimo-shake/configure"
-	"time"
+	LOG "nimo-shake/third_party/log4go"
 )
 
 type MTypeConverter struct {
 }
-
 
 func (tc *MTypeConverter) Run(input map[string]*dynamodb.AttributeValue) (interface{}, error) {
 	funcStartT := time.Now()
@@ -24,10 +25,10 @@ func (tc *MTypeConverter) Run(input map[string]*dynamodb.AttributeValue) (interf
 	out := new(interface{})
 	if err := dynamodbattribute.UnmarshalMap(input, out); err == nil {
 
-		for key, value := range (*out).(map[string]interface {}) {
+		for key, value := range (*out).(map[string]interface{}) {
 			if key == "_id" {
-				delete((*out).(map[string]interface {}), key)
-				((*out).(map[string]interface {}))[conf.ConvertIdFunc(key)] = value
+				delete((*out).(map[string]interface{}), key)
+				((*out).(map[string]interface{}))[conf.ConvertIdFunc(key)] = value
 			}
 		}
 
