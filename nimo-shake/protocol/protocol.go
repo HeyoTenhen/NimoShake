@@ -1,4 +1,4 @@
-package protocal
+package protocol
 
 import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"

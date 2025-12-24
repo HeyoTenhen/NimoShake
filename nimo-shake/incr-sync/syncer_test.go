@@ -1,22 +1,22 @@
 package incr_sync
 
 import (
+	"fmt"
 	"testing"
 	"time"
-	"fmt"
 
-	"nimo-shake/common"
 	"nimo-shake/checkpoint"
-	"nimo-shake/protocal"
+	"nimo-shake/common"
 	"nimo-shake/configure"
+	"nimo-shake/protocol"
 	"nimo-shake/writer"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/aws/aws-sdk-go/service/dynamodbstreams"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/vinllen/mgo/bson"
+	"github.com/aws/aws-sdk-go/service/dynamodbstreams"
+	"github.com/stretchr/testify/assert"
 	"github.com/vinllen/mgo"
+	"github.com/vinllen/mgo/bson"
 )
 
 const (
@@ -36,7 +36,7 @@ func TestBatcher(t *testing.T) {
 		fmt.Printf("TestBatcher case %d.\n", nr)
 		nr++
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -93,7 +93,7 @@ func TestBatcher(t *testing.T) {
 		fmt.Printf("TestBatcher case %d.\n", nr)
 		nr++
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -198,7 +198,7 @@ func TestBatcher(t *testing.T) {
 		fmt.Printf("TestBatcher case %d.\n", nr)
 		nr++
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -325,7 +325,7 @@ func TestBatcher(t *testing.T) {
 		fmt.Printf("TestBatcher case %d.\n", nr)
 		nr++
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -403,7 +403,7 @@ func TestBatcher_Executor(t *testing.T) {
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -415,7 +415,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 		d.targetWriter.DropTable()
@@ -484,7 +484,7 @@ func TestBatcher_Executor(t *testing.T) {
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		d := &Dispatcher{
@@ -496,7 +496,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 		d.targetWriter.DropTable()
@@ -605,7 +605,7 @@ func TestBatcher_Executor(t *testing.T) {
 		err := ckpt.DropAll()
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
@@ -620,7 +620,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 		d.targetWriter.DropTable()
@@ -742,7 +742,7 @@ func TestBatcher_Executor(t *testing.T) {
 		err := ckpt.DropAll()
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
@@ -751,7 +751,7 @@ func TestBatcher_Executor(t *testing.T) {
 
 		// create index
 		err = targetClient.Session.DB("utTestDB").C("utTestCollection").EnsureIndex(mgo.Index{
-			Key: []string{"key0"},
+			Key:    []string{"key0"},
 			Unique: true,
 		})
 		assert.Equal(t, nil, err, "should be equal")
@@ -765,7 +765,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 
@@ -886,7 +886,7 @@ func TestBatcher_Executor(t *testing.T) {
 		err := ckpt.DropAll()
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
@@ -909,7 +909,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 
@@ -1038,7 +1038,7 @@ func TestBatcher_Executor(t *testing.T) {
 		err := ckpt.DropAll()
 		assert.Equal(t, nil, err, "should be equal")
 
-		converter := protocal.NewConverter("raw")
+		converter := protocol.NewConverter("raw")
 		assert.Equal(t, true, converter != nil, "should be equal")
 
 		targetClient, err := utils.NewMongoConn(TestMongoAddress, utils.ConnectModePrimary, true)
@@ -1061,7 +1061,7 @@ func TestBatcher_Executor(t *testing.T) {
 				Collection: "utTestCollection",
 			},
 			unitTestStr: "test",
-			metric: utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
+			metric:      utils.NewMetric(utils.TypeIncr, utils.METRIC_CKPT_TIMES|utils.METRIC_SUCCESS|utils.METRIC_TPS),
 		}
 		d.targetWriter = writer.NewWriter(conf.Options.TargetType, conf.Options.TargetAddress, d.ns, conf.Options.LogLevel)
 

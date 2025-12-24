@@ -21,11 +21,9 @@ func NewSample(sampleCnt, totalCnt int64) *Sample {
 }
 
 func (s *Sample) Hit() bool {
-	if s.sampleCnt >= s.totalCnt {
+	// sampleCnt == 0 means disable sampling, compare all data
+	if s.sampleCnt == 0 || s.sampleCnt >= s.totalCnt {
 		return true
-	}
-	if s.sampleCnt == 0 {
-		return false
 	}
 
 	return s.source.Int63n(s.totalCnt) < s.sampleCnt
