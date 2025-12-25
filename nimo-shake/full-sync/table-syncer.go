@@ -10,7 +10,7 @@ import (
 
 	utils "nimo-shake/common"
 	conf "nimo-shake/configure"
-	"nimo-shake/protocal"
+	"nimo-shake/protocol"
 	"nimo-shake/qps"
 	"nimo-shake/writer"
 
@@ -31,7 +31,7 @@ type tableSyncer struct {
 	sourceTableDescribe *dynamodb.TableDescription
 	fetcherChan         chan *dynamodb.ScanOutput // chan between fetcher and parser
 	parserChan          chan interface{}          // chan between parser and writer
-	converter           protocal.Converter        // converter
+	converter           protocol.Converter        // converter
 	collectionMetric    *utils.CollectionMetric
 }
 
@@ -51,7 +51,7 @@ func NewTableSyncer(id int, table string, collectionMetric *utils.CollectionMetr
 		return nil
 	}
 
-	converter := protocal.NewConverter(conf.Options.ConvertType)
+	converter := protocol.NewConverter(conf.Options.ConvertType)
 	if converter == nil {
 		LOG.Error("tableSyncer[%v] with table[%v] create converter failed", id, table)
 		return nil

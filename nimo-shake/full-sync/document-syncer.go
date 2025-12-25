@@ -10,7 +10,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	LOG "github.com/vinllen/log4go"
-	"nimo-shake/protocal"
+	"nimo-shake/protocol"
 	"sync/atomic"
 )
 
@@ -100,7 +100,7 @@ func (ds *documentSyncer) Run() {
 				batchGroup = append(batchGroup, data)
 			} else {
 				switch v := data.(type) {
-				case protocal.RawData:
+				case protocol.RawData:
 					if v.Size > 0 {
 						batchGroup = append(batchGroup, v.Data)
 						batchGroupSize += v.Size

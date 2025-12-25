@@ -12,7 +12,7 @@ import (
 	"nimo-shake/checkpoint"
 	utils "nimo-shake/common"
 	conf "nimo-shake/configure"
-	"nimo-shake/protocal"
+	"nimo-shake/protocol"
 	"nimo-shake/qps"
 	"nimo-shake/writer"
 
@@ -134,7 +134,7 @@ type Dispatcher struct {
 	targetWriter              writer.Writer
 	batchChan                 chan *dynamodbstreams.Record
 	executorChan              chan *ExecuteNode
-	converter                 protocal.Converter
+	converter                 protocol.Converter
 	ns                        utils.NS
 	checkpointPosition        string
 	checkpointApproximateTime string
@@ -167,7 +167,7 @@ func NewDispatcher(id int, shard *utils.ShardNode, ckptWriter checkpoint.Writer,
 	}
 
 	// converter
-	converter := protocal.NewConverter(conf.Options.ConvertType)
+	converter := protocol.NewConverter(conf.Options.ConvertType)
 	if converter == nil {
 		LOG.Crashf("table[%s] create converter[%v] failed", conf.Options.ConvertType)
 	}
@@ -476,8 +476,8 @@ func (d *Dispatcher) batcher() {
 
 			switch d.targetWriter.(type) {
 			case *writer.MongoCommunityWriter:
-				node.operate = append(node.operate, value.(protocal.RawData).Data)
-				node.index = append(node.index, index.(protocal.RawData).Data)
+				node.operate = append(node.operate, value.(protocol.RawData).Data)
+				node.index = append(node.index, index.(protocol.RawData).Data)
 			case *writer.DynamoProxyWriter:
 				node.operate = append(node.operate, value)
 				node.index = append(node.index, index)
@@ -492,8 +492,8 @@ func (d *Dispatcher) batcher() {
 
 			switch d.targetWriter.(type) {
 			case *writer.MongoCommunityWriter:
-				node.operate = append(node.operate, value.(protocal.RawData).Data)
-				node.index = append(node.index, index.(protocal.RawData).Data)
+				node.operate = append(node.operate, value.(protocol.RawData).Data)
+				node.index = append(node.index, index.(protocol.RawData).Data)
 			case *writer.DynamoProxyWriter:
 				node.operate = append(node.operate, value)
 				node.index = append(node.index, index)
@@ -503,7 +503,7 @@ func (d *Dispatcher) batcher() {
 		case EventRemove:
 			switch d.targetWriter.(type) {
 			case *writer.MongoCommunityWriter:
-				node.index = append(node.index, index.(protocal.RawData).Data)
+				node.index = append(node.index, index.(protocol.RawData).Data)
 			case *writer.DynamoProxyWriter:
 				node.index = append(node.index, index)
 			default:

@@ -28,7 +28,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	// 若err != nil, 会自动打印错误到 stderr
+	// if err != nil, error will be printed to stderr automatically
 	if err != nil {
 		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.ErrHelp {
 			os.Exit(0)
@@ -104,6 +104,11 @@ func sanitizeOptions() error {
 	} else if conf.Opts.ConvertType != shakeUtils.ConvertMTypeChange {
 		return fmt.Errorf("convertType[%v] illegal, only support %v",
 			conf.Opts.ConvertType, shakeUtils.ConvertMTypeChange)
+	}
+
+	if conf.Opts.CheckMode != utils.CheckModeMongoDB && conf.Opts.CheckMode != utils.CheckModeDynamoDB {
+		return fmt.Errorf("checkMode[%v] illegal, must be '%v' or '%v'",
+			conf.Opts.CheckMode, utils.CheckModeMongoDB, utils.CheckModeDynamoDB)
 	}
 
 	return nil

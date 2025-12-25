@@ -13,11 +13,12 @@ var Opts struct {
 	TargetAddress         string `short:"t" long:"targetAddress" description:"mongodb target address"`
 	DiffOutputFile        string `short:"d" long:"diffOutputFile" default:"nimo-full-check-diff" description:"diff output file name"`
 	Parallel              int    `short:"p" long:"parallel" default:"16" description:"how many threads used to compare, default is 16"`
-	Sample                int64  `short:"e" long:"sample" default:"1000" description:"comparison sample number for each table, 0 means disable"`
+	Sample                int64  `short:"e" long:"sample" default:"1000" description:"comparison sample number for each table, 0 means compare all"`
 	//IndexPrimary          bool   `short:"m" long:"indexPrimary" description:"enable compare primary index"`
 	//IndexUser             bool   `long:"indexUser" description:"enable compare user index"`
 	FilterCollectionWhite string `long:"filterCollectionWhite" default:"" description:"only compare the given tables, split by ';'"`
 	FilterCollectionBlack string `long:"filterCollectionBlack" default:"" description:"do not compare the given tables, split by ';'"`
 	ConvertType           string `short:"c" long:"convertType" default:"change" description:"convert type"`
+	CheckMode             string `short:"m" long:"checkMode" default:"dynamodb" description:"check mode: mongodb (use mongodb as baseline, check dynamodb) or dynamodb (use dynamodb as baseline, check mongodb)"`
 	Version               bool   `short:"v" long:"version" description:"print version"`
 }
